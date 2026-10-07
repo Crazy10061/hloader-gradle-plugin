@@ -26,7 +26,7 @@ public final class SrgWriter {
      * {@code MappingProvider.getMethodMapping}/{@code getClassMapping}, both a plain
      * {@code map.get(argument)}). That means the AP needs the OPPOSITE column order
      * ({@code <named> <obf>}) from the standard {@code joined.srg} convention (and from what
-     * {@link SrgParser}/{@link RemapGameJar} expect for their own obf-first round-trip), so this
+     * {@link SrgParser}/{@code RemapGameJar} expect for their own obf-first round-trip), so this
      * file is written separately from - and with reversed columns compared to - the one written
      * via {@link #write(MappingSet, File)}.
      */

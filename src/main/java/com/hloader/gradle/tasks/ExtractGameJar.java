@@ -18,7 +18,8 @@ import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
-
+import org.gradle.work.DisableCachingByDefault;
+@DisableCachingByDefault(because = "Extracts files into a shared directory")
 /**
  * Pulls the actual game jar out of server.jar into a single, self-contained compile-time jar.
  * Modern (1.18+) server jars use Mojang's "bundler" format, where the real game classes are packed

@@ -3,7 +3,7 @@ package com.hloader.gradle.preprocess;
 import com.hloader.gradle.VersionResolver;
 
 /**
- * Parses the expression inside a {@code //? if <expression> {} block, e.g. {@code >=1.13},
+ * Parses the expression inside a {@code //? if <expression>} block, e.g. {@code >=1.13},
  * {@code <1.7.10 && !1.6.4}, {@code (1.8.9 || 1.12.2)}. A version id with no comparison operator
  * means equality ({@code 1.12.2} is shorthand for {@code ==1.12.2}). Version ordering comes from
  * {@link VersionResolver#compareVersions}, so ids must be known to Mojang's manifest.

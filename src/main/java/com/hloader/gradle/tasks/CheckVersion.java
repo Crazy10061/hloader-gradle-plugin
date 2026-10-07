@@ -14,7 +14,8 @@ import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.TaskAction;
-
+import org.gradle.work.DisableCachingByDefault;
+@DisableCachingByDefault(because = "Only prints version information")
 /**
  * Prints a report of what hloader knows about the configured {@code minecraftVersion}: whether it
  * has a dedicated server, whether the LaunchWrapper patch applies, and which mapping source each

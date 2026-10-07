@@ -1,9 +1,10 @@
 plugins {
     `java-gradle-plugin`
+    id("com.gradle.plugin-publish") version "1.3.0"
 }
 
-group = "com.hloader"
-version = "0.1.0-SNAPSHOT"
+group = "dev.crazy10061"
+version = "0.1.0"
 
 java {
     toolchain {
@@ -23,10 +24,15 @@ dependencies {
 }
 
 gradlePlugin {
+    website.set("https://github.com/Crazy10061/hloader-gradle-plugin")
+    vcsUrl.set("https://github.com/Crazy10061/hloader-gradle-plugin.git")
     plugins {
         create("hloader") {
-            id = "com.hloader.plugin"
+            id = "dev.crazy10061.hloader"
             implementationClass = "com.hloader.gradle.HloaderPlugin"
+            displayName = "hloader"
+            description = "Build and run mods for hloader."
+            tags.set(listOf("minecraft", "mods"))
         }
     }
 }

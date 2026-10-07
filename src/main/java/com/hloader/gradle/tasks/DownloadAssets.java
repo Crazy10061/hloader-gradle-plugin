@@ -25,7 +25,8 @@ import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
-
+import org.gradle.work.DisableCachingByDefault;
+@DisableCachingByDefault(because = "Downloads files from the network")
 /**
  * Downloads a version's asset index and every asset object it references, laid out the same way
  * the vanilla launcher does ({@code indexes/<id>.json}, {@code objects/<hash prefix>/<hash>}), so
