@@ -14,7 +14,10 @@ import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
-
+import org.gradle.work.DisableCachingByDefault;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
+@DisableCachingByDefault(because = "Extracts files into a shared directory")
 /**
  * Pulls the game jar's own library jars out of a bundler-format (1.18+) server.jar, so javac can
  * resolve its type annotations. Older server jars don't ship a separate library list (they're
@@ -23,6 +26,7 @@ import org.gradle.api.tasks.TaskAction;
 public abstract class ExtractLibraries extends DefaultTask {
 
     @InputFile
+    @PathSensitive(PathSensitivity.NONE)
     public abstract RegularFileProperty getServerJar();
 
     @OutputDirectory

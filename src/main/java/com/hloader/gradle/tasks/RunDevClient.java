@@ -22,7 +22,10 @@ import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.process.ExecOperations;
-
+import org.gradle.work.DisableCachingByDefault;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
+@DisableCachingByDefault(because = "Launches the game")
 /**
  * Builds the mod, drops it into a "mods" folder, and launches a downloaded Minecraft client with
  * hloader attached as a {@code -javaagent}. Offline/cracked-style login (no real Microsoft
@@ -31,24 +34,30 @@ import org.gradle.process.ExecOperations;
 public abstract class RunDevClient extends DefaultTask {
 
     @InputFile
+    @PathSensitive(PathSensitivity.NONE)
     public abstract RegularFileProperty getLoaderJar();
 
     @InputFile
+    @PathSensitive(PathSensitivity.NONE)
     public abstract RegularFileProperty getClientJar();
 
     @InputFile
+    @PathSensitive(PathSensitivity.NONE)
     public abstract RegularFileProperty getModJar();
 
     @Internal
     public abstract Property<MinecraftVersionInfo> getVersionInfo();
 
     @InputDirectory
+    @PathSensitive(PathSensitivity.NONE)
     public abstract DirectoryProperty getLibrariesDir();
 
     @InputDirectory
+    @PathSensitive(PathSensitivity.NONE)
     public abstract DirectoryProperty getNativesDir();
 
     @InputDirectory
+    @PathSensitive(PathSensitivity.NONE)
     public abstract DirectoryProperty getAssetsDir();
 
     @OutputDirectory

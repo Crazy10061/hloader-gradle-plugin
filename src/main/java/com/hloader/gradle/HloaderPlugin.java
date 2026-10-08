@@ -32,13 +32,10 @@ import org.gradle.language.jvm.tasks.ProcessResources;
  * format, and puts them on the compile classpath - no manual jar wrangling required. It also
  * registers {@code runDevServer} and {@code runDevClient} tasks so mod authors never have to write
  * their own download-and-launch wiring for either side.
- *
- * <p>Note: the run tasks assume they're applied to a project inside the same Gradle build as the
- * "hloader" root project (they reach {@code rootProject.tasks.named("shadowJar")} directly). That's
- * true for every mod in this repo; a truly standalone distribution of this plugin would need the
- * loader published as its own artifact instead.</p>
  */
 public class HloaderPlugin implements Plugin<Project> {
+
+    private static final String LOADER_VERSION = "0.1.1";
 
     @Override
     public void apply(Project project) {
@@ -49,6 +46,20 @@ public class HloaderPlugin implements Plugin<Project> {
         extension.getPatchLegacyLaunchWrapper().convention(true);
         extension.getMappingProvider().convention("auto");
         extension.getPreprocessSources().convention(false);
+
+        project.getRepositories().mavenCentral();
+        project.getRepositories().maven(repo -> repo.setUrl("https://repo.spongepowered.org/repository/maven-public/"));
+
+        var loaderConfig = project.getConfigurations().create("hloaderLoader", c -> {
+            c.setCanBeConsumed(false);
+            c.setTransitive(false);
+        });
+        project.getDependencies().add("hloaderLoader", "dev.crazy10061:hloader:" + LOADER_VERSION + ":all");
+
+        project.getDependencies().add(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
+                "dev.crazy10061:hloader:" + LOADER_VERSION);
+        project.getDependencies().add(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
+                "org.spongepowered:mixin:0.8.7");
 
         // extension.preprocessSources is read (not just wired lazily) below, so this has to wait
         // until the consuming build script has actually run its `hloader { }` block - at plugin
@@ -233,15 +244,14 @@ public class HloaderPlugin implements Plugin<Project> {
             jar.into("hloader", spec -> spec.from(generateMappingsTask.flatMap(GenerateMappings::getSrgFile)));
         });
 
-        TaskProvider<Task> loaderJarTask = project.getRootProject().getTasks().named("shadowJar");
         TaskProvider<Task> modJarTask = project.getTasks().named(JavaPlugin.JAR_TASK_NAME);
 
         project.getTasks().register("runDevServer", RunDevServer.class, task -> {
             task.setGroup("hloader");
             task.setDescription("Builds this mod and runs a local Minecraft server with it. "
                     + "Pass -PexportMixins to dump transformed classes to .mixin.out/.");
-            task.dependsOn(loaderJarTask, downloadServerJarTask, modJarTask);
-            task.getLoaderJar().set(project.getLayout().file(loaderJarTask.map(t -> ((Jar) t).getArchiveFile().get().getAsFile())));
+            task.dependsOn(downloadServerJarTask, modJarTask);
+            task.getLoaderJar().set(project.getLayout().file(project.provider(loaderConfig::getSingleFile)));
             task.getServerJar().set(project.getLayout().file(downloadServerJarTask.map(DownloadMinecraftJar::getOutputJar)));
             task.getModJar().set(project.getLayout().file(modJarTask.map(t -> ((Jar) t).getArchiveFile().get().getAsFile())));
             task.getVersionInfo().set(project.provider(downloadServerJarTask.get()::getVersionInfo));
@@ -276,8 +286,8 @@ public class HloaderPlugin implements Plugin<Project> {
         project.getTasks().register("runDevClient", RunDevClient.class, task -> {
             task.setGroup("hloader");
             task.setDescription("Builds this mod and runs a local Minecraft client (offline login) with it.");
-            task.dependsOn(loaderJarTask, downloadClientJarTask, downloadClientLibrariesTask, downloadAssetsTask, modJarTask);
-            task.getLoaderJar().set(project.getLayout().file(loaderJarTask.map(t -> ((Jar) t).getArchiveFile().get().getAsFile())));
+            task.dependsOn(downloadClientJarTask, downloadClientLibrariesTask, downloadAssetsTask, modJarTask);
+            task.getLoaderJar().set(project.getLayout().file(project.provider(loaderConfig::getSingleFile)));
             task.getClientJar().set(project.getLayout().file(downloadClientJarTask.map(DownloadMinecraftJar::getOutputJar)));
             task.getModJar().set(project.getLayout().file(modJarTask.map(t -> ((Jar) t).getArchiveFile().get().getAsFile())));
             task.getVersionInfo().set(project.provider(downloadClientJarTask.get()::getVersionInfo));

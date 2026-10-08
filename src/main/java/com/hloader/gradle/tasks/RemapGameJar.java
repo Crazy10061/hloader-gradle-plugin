@@ -11,7 +11,10 @@ import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
-
+import org.gradle.work.DisableCachingByDefault;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
+@DisableCachingByDefault(because = "Remaps jars into a shared directory")
 /**
  * Deobfuscates a game jar (obfuscated names -> Mojang's official names) so mods compile against
  * readable code. Reads the mapping back in from {@link GenerateMappings}' SRG *file* rather than
@@ -22,9 +25,11 @@ import org.gradle.api.tasks.TaskAction;
 public abstract class RemapGameJar extends DefaultTask {
 
     @InputFile
+    @PathSensitive(PathSensitivity.NONE)
     public abstract RegularFileProperty getInputJar();
 
     @InputFile
+    @PathSensitive(PathSensitivity.NONE)
     public abstract RegularFileProperty getSrgFile();
 
     @OutputFile

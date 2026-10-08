@@ -16,7 +16,10 @@ import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.process.ExecOperations;
-
+import org.gradle.work.DisableCachingByDefault;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
+@DisableCachingByDefault(because = "Launches the game")
 /**
  * Builds the mod, drops it into a "mods" folder, and runs a downloaded Minecraft server jar with
  * hloader attached as a {@code -javaagent} - no jar-patching needed for local dev runs, since we
@@ -25,12 +28,15 @@ import org.gradle.process.ExecOperations;
 public abstract class RunDevServer extends DefaultTask {
 
     @InputFile
+    @PathSensitive(PathSensitivity.NONE)
     public abstract RegularFileProperty getLoaderJar();
 
     @InputFile
+    @PathSensitive(PathSensitivity.NONE)
     public abstract RegularFileProperty getServerJar();
 
     @InputFile
+    @PathSensitive(PathSensitivity.NONE)
     public abstract RegularFileProperty getModJar();
 
     @Internal

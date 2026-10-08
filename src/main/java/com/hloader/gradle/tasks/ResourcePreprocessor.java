@@ -18,7 +18,10 @@ import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
-
+import org.gradle.work.DisableCachingByDefault;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
+@DisableCachingByDefault(because = "Rewrites resources into the build directory")
 /**
  * Version-gates the two resource formats hloader knows how to preprocess for the active
  * {@code minecraftVersion}: {@code .cfg} access-transformer files, via {@link CodePreprocessor}'s

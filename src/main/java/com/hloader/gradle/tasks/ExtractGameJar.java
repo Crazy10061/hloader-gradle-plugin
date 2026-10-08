@@ -15,10 +15,9 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.RegularFileProperty;
-import org.gradle.api.tasks.InputFile;
-import org.gradle.api.tasks.OutputFile;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.*;
 import org.gradle.work.DisableCachingByDefault;
+
 @DisableCachingByDefault(because = "Extracts files into a shared directory")
 /**
  * Pulls the actual game jar out of server.jar into a single, self-contained compile-time jar.
@@ -30,6 +29,7 @@ import org.gradle.work.DisableCachingByDefault;
 public abstract class ExtractGameJar extends DefaultTask {
 
     @InputFile
+    @PathSensitive(PathSensitivity.NONE)
     public abstract RegularFileProperty getServerJar();
 
     @OutputFile

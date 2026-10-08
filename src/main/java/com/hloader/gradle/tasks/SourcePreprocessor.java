@@ -17,7 +17,10 @@ import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
-
+import org.gradle.work.DisableCachingByDefault;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
+@DisableCachingByDefault(because = "Rewrites sources into the build directory")
 /**
  * Rewrites {@code //? if <condition> { ... //? }} and {@code //$$}-prefixed regions in a Java
  * source tree for the active {@code minecraftVersion}, so one shared source tree can target
